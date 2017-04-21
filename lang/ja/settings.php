@@ -6,7 +6,7 @@
  */
 
 // keys need to match the config setting name
-$lang['regex_excludes'] = 'Pages noindex (Regex)';
+$lang['regex_excludes'] = 'インデックスしないページ (Regex)';
 
 
 

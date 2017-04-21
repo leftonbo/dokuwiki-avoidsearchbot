@@ -5,4 +5,4 @@
  * @author LefTobno <dragonbird.tonbo@gmail.com>
  */
 
-//$conf['fixme']    = 'FIXME';
+$conf['regex_excludes'] = '^(:wiki|:playground)';

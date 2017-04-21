@@ -11,33 +11,47 @@ if(!defined('DOKU_INC')) die();
 
 class action_plugin_avoidsearchbot extends DokuWiki_Action_Plugin {
 
-    /**
-     * Registers a callback function for a given event
-     *
-     * @param Doku_Event_Handler $controller DokuWiki's event controller object
-     * @return void
-     */
-    public function register(Doku_Event_Handler $controller) {
+  /**
+   * Registers a callback function for a given event
+   *
+   * @param Doku_Event_Handler $controller DokuWiki's event controller object
+   * @return void
+   */
+  public function register(Doku_Event_Handler $controller) {
 
-       $controller->register_hook('TPL_METAHEADER_OUTPUT', 'FIXME', $this, 'handle_tpl_metaheader_output');
-       $controller->register_hook('ACTION_HEADERS_SEND', 'FIXME', $this, 'handle_action_headers_send');
-   
+    $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'handle_avoidsearchbot');
+    $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'handle_avoidsearchbot');
+
+  }
+
+  /**
+   * [Custom event handler which performs action]
+   *
+   * @param Doku_Event $event  event object by reference
+   * @param mixed      $param  [the parameters passed as fifth argument to register_hook() when this
+   *                           handler was registered]
+   * @return void
+   */
+
+  public function handle_avoidsearchbot(Doku_Event &$event, $param) {
+    global $ID;
+    
+    $pagename = cleanID($ID);
+    
+    if ((bool) preg_match('/'. trim($this->getConf('regex_excludes')) .'/', $pagename)) return false;
+    
+    if ($event->name == 'TPL_METAHEADER_OUTPUT') {
+      $key = array_search(
+        array( 'name'=>'robots', 'content'=>'index,follow'),
+        $event->data['meta']
+      );
+      if ($key !== false) {
+          $event->data['meta'][$key] = array( 'name'=>'robots', 'content'=>'noindex,follow');
+      }
+    } else if ($event->name == 'ACTION_HEADERS_SEND') {
+      $event->data[] = 'X-Robots-Tag: noindex';
     }
-
-    /**
-     * [Custom event handler which performs action]
-     *
-     * @param Doku_Event $event  event object by reference
-     * @param mixed      $param  [the parameters passed as fifth argument to register_hook() when this
-     *                           handler was registered]
-     * @return void
-     */
-
-    public function handle_tpl_metaheader_output(Doku_Event &$event, $param) {
-    }
-
-    public function handle_action_headers_send(Doku_Event &$event, $param) {
-    }
+  }
 
 }
 

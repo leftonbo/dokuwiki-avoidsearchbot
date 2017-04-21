@@ -5,6 +5,5 @@
  * @author LefTobno <dragonbird.tonbo@gmail.com>
  */
 
-
-//$meta['fixme'] = array('string');
+$meta['regex_excludes'] = array('string');
 
