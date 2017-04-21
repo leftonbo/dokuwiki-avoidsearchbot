@@ -5,4 +5,4 @@
  * @author LefTobno <dragonbird.tonbo@gmail.com>
  */
 
-$conf['regex_excludes'] = '^(:wiki|:playground)';
+$conf['regex_excludes'] = '^(wiki|playground)';
