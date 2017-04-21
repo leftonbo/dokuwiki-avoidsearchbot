@@ -38,7 +38,9 @@ class action_plugin_avoidsearchbot extends DokuWiki_Action_Plugin {
     
     $pagename = cleanID($ID);
     
-    if ((bool) preg_match('/'. trim($this->getConf('regex_excludes')) .'/', $pagename)) return false;
+    if ((bool) preg_match('/'. trim($this->getConf('regex_excludes')) .'/', $pagename) == false) {
+      return false;
+    }
     
     if ($event->name == 'TPL_METAHEADER_OUTPUT') {
       $key = array_search(
@@ -46,7 +48,7 @@ class action_plugin_avoidsearchbot extends DokuWiki_Action_Plugin {
         $event->data['meta']
       );
       if ($key !== false) {
-          $event->data['meta'][$key] = array( 'name'=>'robots', 'content'=>'noindex,follow');
+          $event->data['meta'][$key] = array( 'name'=>'robots', 'content'=>'noindex,nofollow');
       }
     } else if ($event->name == 'ACTION_HEADERS_SEND') {
       $event->data[] = 'X-Robots-Tag: noindex';
